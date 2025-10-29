@@ -33,6 +33,12 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 if sys.platform == 'darwin':  # macOS
     os.environ['SDL_AUDIODRIVER'] = 'coreaudio'
     os.environ['SDL_AUDIO_DEVICE_ADD_CAPTURE'] = '0'
+    # Disable SDL event watching to prevent permission dialogs and terminal output
+    os.environ['SDL_JOYSTICK_THREAD'] = '0'
+    os.environ['SDL_HAPTIC_DISABLED'] = '1'
+
+# Suppress all SDL debug/info messages that bypass curses
+os.environ['SDL_HINT_LOGGING'] = 'quiet'
 
 import pygame
 
@@ -257,7 +263,15 @@ class RetroSynth:
 
     def __init__(self):
         # Initialize pygame mixer for audio playback
-        pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+        # Temporarily redirect stderr to suppress SDL warnings that bypass curses
+        import io
+        old_stderr = sys.stderr
+        sys.stderr = io.StringIO()
+        try:
+            pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+        finally:
+            sys.stderr = old_stderr
+
         self.sample_rate = 22050
         self.sounds = {}
         self.music_channel = None
@@ -1621,10 +1635,17 @@ class Game:
         }
 
         # Start keyboard listener in background thread
-        self.keyboard_listener = keyboard.Listener(
-            on_press=self._on_key_press,
-            on_release=self._on_key_release)
-        self.keyboard_listener.start()
+        # Suppress pynput accessibility warnings on macOS that bypass curses
+        import io
+        old_stderr = sys.stderr
+        sys.stderr = io.StringIO()
+        try:
+            self.keyboard_listener = keyboard.Listener(
+                on_press=self._on_key_press,
+                on_release=self._on_key_release)
+            self.keyboard_listener.start()
+        finally:
+            sys.stderr = old_stderr
 
         # Setup curses
         curses.curs_set(0)
@@ -5621,5 +5642,63 @@ def main(stdscr):
         game.keyboard_listener.stop()
 
 
+def check_macos_accessibility():
+    """Check if Terminal has accessibility permissions on macOS"""
+    if sys.platform != 'darwin':
+        return True  # Not macOS, no check needed
+
+    # Try to start a keyboard listener briefly to check for permissions
+    # Capture both stdout and stderr since the warning could go to either
+    import io
+    old_stdout = sys.stdout
+    old_stderr = sys.stderr
+    stdout_capture = io.StringIO()
+    stderr_capture = io.StringIO()
+    sys.stdout = stdout_capture
+    sys.stderr = stderr_capture
+
+    try:
+        # Attempt to create and start a listener
+        test_listener = keyboard.Listener(on_press=lambda key: None)
+        test_listener.start()
+        # Give it a moment to trigger any warnings
+        time.sleep(0.1)
+        test_listener.stop()
+
+        # Check if the warning message was printed to either stream
+        stdout_output = stdout_capture.getvalue()
+        stderr_output = stderr_capture.getvalue()
+        combined_output = (stdout_output + stderr_output).lower()
+
+        return "not trusted" not in combined_output
+    except Exception:
+        # If we can't check, assume it's okay
+        return True
+    finally:
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+
+
 if __name__ == "__main__":
+    # Check for Mac OS accessibility permissions before starting
+    if not check_macos_accessibility():
+        print("\n" + "="*70)
+        print("  Mac OS Accessibility Permission Required")
+        print("="*70)
+        print("\nBA-BAAM! needs accessibility permissions to monitor keyboard input.")
+        print("\nTo grant permission:")
+        print("  1. Open System Settings (System Preferences on older macOS)")
+        print("  2. Go to Privacy & Security → Accessibility")
+        print("  3. Click the '+' button or toggle switch")
+        print("  4. Add and enable 'Terminal' (or your terminal app)")
+        print("\nImportant: After granting permission, restart BA-BAAM!")
+        print("\nNote: Without this permission, the game will still run but keyboard")
+        print("      input may be delayed or unresponsive.")
+        print("="*70 + "\n")
+
+        response = input("Continue anyway? (y/n): ").strip().lower()
+        if response != 'y':
+            print("\nExiting. Please grant accessibility permission and try again.\n")
+            sys.exit(0)
+
     curses.wrapper(main)
