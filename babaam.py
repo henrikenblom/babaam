@@ -24,6 +24,7 @@ from typing import List, Tuple
 from enum import Enum
 from pynput import keyboard
 import numpy as np
+from version import __version__
 
 # Suppress pygame welcome message
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -4935,6 +4936,13 @@ class Game:
             menu_text = "[N] New Game    [I] Intro    [B] Briefing    [ESC] Quit"
             try:
                 self.stdscr.addstr(bottom_y, (self.width - len(menu_text)) // 2, menu_text, curses.color_pair(3) | curses.A_BOLD)
+            except:
+                pass
+
+            # Draw version in lower left corner
+            version_text = f"v{__version__}"
+            try:
+                self.stdscr.addstr(self.height - 2, 2, version_text, curses.color_pair(4))
             except:
                 pass
 
