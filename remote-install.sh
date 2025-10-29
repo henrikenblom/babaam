@@ -171,6 +171,7 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     if grep -q "# Added by BA-BAAM! installer" "$RC_FILE" 2>/dev/null; then
         echo -e "${YELLOW}PATH configuration already exists in ${RC_FILE}${NC}"
         PATH_CONFIGURED=false
+        PATH_ALREADY_IN_RC=true
     else
         read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r < /dev/tty
         echo ""
@@ -185,12 +186,14 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
                 echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$RC_FILE"
             fi
             echo -e "${GREEN}PATH added to ${RC_FILE}!${NC}"
-            echo -e "${YELLOW}Please restart your terminal or run: source ${RC_FILE}${NC}"
             PATH_CONFIGURED=false
+            PATH_JUST_ADDED=true
         else
             echo -e "${YELLOW}Skipping PATH configuration.${NC}"
             PATH_CONFIGURED=false
+            PATH_JUST_ADDED=false
         fi
+        PATH_ALREADY_IN_RC=false
     fi
 else
     PATH_CONFIGURED=true
@@ -214,5 +217,21 @@ else
     echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
 fi
 echo ""
-echo -e "${YELLOW}Kill them. Kill them all.${NC}"
-echo ""
+
+# Show prominent restart reminder if PATH was added or already exists in rc file
+if [ "${PATH_ALREADY_IN_RC:-false}" = true ] || [ "${PATH_JUST_ADDED:-false}" = true ]; then
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║                          IMPORTANT NOTICE                             ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${YELLOW}The PATH configuration is in your ${RC_FILE}, but it's NOT active${NC}"
+    echo -e "${YELLOW}in this terminal session yet.${NC}"
+    echo ""
+    echo -e "${YELLOW}To activate it, you MUST do ONE of the following:${NC}"
+    echo -e "${GREEN}  1. Restart your terminal (close and reopen)${NC}"
+    echo -e "${GREEN}  2. Open a new terminal window${NC}"
+    echo -e "${GREEN}  3. Run: source ${RC_FILE}${NC}"
+    echo ""
+    echo -e "${YELLOW}After that, you can use the 'babaam' command directly.${NC}"
+    echo ""
+fi
