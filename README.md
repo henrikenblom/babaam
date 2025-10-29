@@ -6,6 +6,8 @@ A feature-rich, action-packed side-scrolling space shooter game that runs in you
 
 **Kill them. Kill them all.**
 
+![BA-BAAM Main Menu](/media/ba-baam-menu.png)
+
 ## Requirements
 
 - Python 3.6 or higher
