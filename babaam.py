@@ -3871,7 +3871,11 @@ class Game:
 
     def show_intro(self):
         """Show cinematic pseudo-3D intro sequence before main menu"""
+        # Clear screen thoroughly to remove any pygame init messages
         self.stdscr.clear()
+        self.stdscr.refresh()
+        self.stdscr.erase()
+        self.stdscr.refresh()
         self.stdscr.nodelay(1)
         self.stdscr.timeout(0)
 
@@ -5581,6 +5585,10 @@ class Game:
 
 def main(stdscr):
     """Entry point for curses wrapper"""
+    # Clear any pre-existing terminal output before curses takes over
+    stdscr.clear()
+    stdscr.refresh()
+
     # Check minimum terminal size requirement
     height, width = stdscr.getmaxyx()
     if height < 24 or width < 80:
