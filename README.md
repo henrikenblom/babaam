@@ -4,8 +4,6 @@
 
 A feature-rich, action-packed side-scrolling space shooter game that runs in your terminal!
 
-**Kill them. Kill them all.**
-
 ![BA-BAAM Main Menu](/media/ba-baam-menu.png)
 
 ## Requirements
