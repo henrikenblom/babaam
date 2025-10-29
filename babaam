@@ -30,6 +30,10 @@ fi
 echo -e "${YELLOW}Checking dependencies...${NC}"
 MISSING_DEPS=()
 
+export PYGAME_HIDE_SUPPORT_PROMPT=1
+export SDL_AUDIODRIVER=coreaudio
+export SDL_AUDIO_DEVICE_ADD_CAPTURE=0
+
 python3 -c "import pynput" 2>/dev/null || MISSING_DEPS+=("pynput")
 python3 -c "import pygame" 2>/dev/null || MISSING_DEPS+=("pygame")
 python3 -c "import numpy" 2>/dev/null || MISSING_DEPS+=("numpy")
