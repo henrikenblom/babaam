@@ -4,7 +4,7 @@
 
 A feature-rich, action-packed side-scrolling space shooter game that runs in your terminal!
 
-**Kill 'em. Kill 'em all.**
+**Kill them. Kill them all.**
 
 ## Requirements
 
@@ -67,7 +67,7 @@ python3 babaam.py
 You'll be greeted with an awesome animated main menu featuring:
 - A scrolling parallax starfield with tiny faint stars and big shiny ones
 - A shimmering BA-BAAM! title with a diagonal golden wave effect that sweeps across at 35 degrees (solid red for 12 seconds, then shimmers for 6 seconds)
-- A shimmering blue tagline "Kill 'em. Kill 'em all!" with a horizontal white wave effect (solid blue for 8 seconds, then shimmers for 4 seconds)
+- A shimmering blue tagline "Kill them. Kill them all." with a horizontal white wave effect (solid blue for 8 seconds, then shimmers for 4 seconds)
 - Shimmer effects cycle independently for visual variety
 - Hardcore electronic background music at 150 BPM with driving bassline, aggressive melody, and blazing fast arpeggios (77-second extended loop with 4 distinct sections)
 
