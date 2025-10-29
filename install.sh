@@ -56,20 +56,30 @@ if ! command -v pip3 &> /dev/null; then
 fi
 echo -e "${GREEN}Found pip3${NC}"
 
-# Install Python dependencies
-echo -e "${YELLOW}Installing Python dependencies...${NC}"
-pip3 install --user pynput pygame numpy || {
-    echo -e "${RED}ERROR: Failed to install Python dependencies.${NC}"
-    echo "You can try installing manually with:"
-    echo "  pip3 install --user pynput pygame numpy"
-    exit 1
-}
-echo -e "${GREEN}Python dependencies installed successfully!${NC}"
-
 # Create installation directory
 echo -e "${YELLOW}Creating installation directory...${NC}"
 mkdir -p "$INSTALL_DIR"
 mkdir -p "$BIN_DIR"
+
+# Create virtual environment
+echo -e "${YELLOW}Creating virtual environment...${NC}"
+if [ ! -d "$INSTALL_DIR/venv" ]; then
+    python3 -m venv "$INSTALL_DIR/venv" || {
+        echo -e "${RED}ERROR: Failed to create virtual environment.${NC}"
+        exit 1
+    }
+fi
+
+# Install Python dependencies in virtual environment
+echo -e "${YELLOW}Installing Python dependencies...${NC}"
+"$INSTALL_DIR/venv/bin/pip" install --upgrade pip
+"$INSTALL_DIR/venv/bin/pip" install pynput pygame numpy || {
+    echo -e "${RED}ERROR: Failed to install Python dependencies.${NC}"
+    echo "You can try installing manually with:"
+    echo "  $INSTALL_DIR/venv/bin/pip install pynput pygame numpy"
+    exit 1
+}
+echo -e "${GREEN}Python dependencies installed successfully!${NC}"
 
 # Copy game files
 echo -e "${YELLOW}Installing game files...${NC}"
@@ -92,9 +102,16 @@ if [ ! -f "$INSTALL_DIR/babaam.py" ]; then
     exit 1
 fi
 
-# Run the game
+# Check if virtual environment exists
+if [ ! -f "$INSTALL_DIR/venv/bin/python3" ]; then
+    echo "ERROR: Virtual environment is missing."
+    echo "Please run install.sh again."
+    exit 1
+fi
+
+# Run the game using virtual environment Python
 cd "$INSTALL_DIR"
-exec python3 "$INSTALL_DIR/babaam.py"
+exec "$INSTALL_DIR/venv/bin/python3" "$INSTALL_DIR/babaam.py"
 LAUNCHER_EOF
 
 chmod +x "$BIN_DIR/babaam"
