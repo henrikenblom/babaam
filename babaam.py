@@ -24,6 +24,16 @@ from typing import List, Tuple
 from enum import Enum
 from pynput import keyboard
 import numpy as np
+
+# Suppress pygame welcome message
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
+# Prevent microphone permission request on macOS
+# These settings prevent SDL/pygame from requesting audio input permissions
+if sys.platform == 'darwin':  # macOS
+    os.environ['SDL_AUDIODRIVER'] = 'coreaudio'
+    os.environ['SDL_AUDIO_DEVICE_ADD_CAPTURE'] = '0'
+
 import pygame
 
 
