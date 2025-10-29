@@ -155,7 +155,7 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     echo -e "${BLUE}Detected shell: ${CURRENT_SHELL}${NC}"
     echo -e "${BLUE}Configuration file: ${RC_FILE}${NC}"
     echo ""
-    read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r
+    read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r < /dev/tty
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -196,7 +196,7 @@ echo ""
 echo -e "${BLUE}Would you like to start BA-BAAM! now?${NC}"
 echo -e "${YELLOW}Tip: For the best experience, make sure your terminal has a size of 80x24${NC}"
 echo ""
-read -p "Start game now? (y/n): " -n 1 -r
+read -p "Start game now? (y/n): " -n 1 -r < /dev/tty
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
