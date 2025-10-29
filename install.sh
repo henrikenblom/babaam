@@ -191,34 +191,15 @@ echo ""
 echo "Game installed to: $INSTALL_DIR"
 echo "Launcher script: $BIN_DIR/babaam"
 echo ""
-
-# Ask if user wants to start the game
-echo -e "${BLUE}Would you like to start BA-BAAM! now?${NC}"
 echo -e "${YELLOW}Tip: For the best experience, make sure your terminal has a size of 80x24${NC}"
 echo ""
-read -p "Start game now? (y/n): " -n 1 -r < /dev/tty
-echo ""
-
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${GREEN}Starting BA-BAAM!...${NC}"
-    echo -e "${YELLOW}Kill them. Kill them all.${NC}"
-    echo ""
-    sleep 1
-    if [ "$PATH_CONFIGURED" = true ]; then
-        exec babaam
-    else
-        exec "$HOME/.local/bin/babaam"
-    fi
+if [ "$PATH_CONFIGURED" = true ]; then
+    echo -e "${BLUE}To start the game, simply run:${NC}"
+    echo -e "${GREEN}  babaam${NC}"
 else
-    echo ""
-    if [ "$PATH_CONFIGURED" = true ]; then
-        echo -e "${BLUE}To start the game later, simply run:${NC}"
-        echo -e "${GREEN}  babaam${NC}"
-    else
-        echo -e "${BLUE}To start the game later, run:${NC}"
-        echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
-    fi
-    echo ""
-    echo -e "${YELLOW}Kill them. Kill them all.${NC}"
-    echo ""
+    echo -e "${BLUE}To start the game, run:${NC}"
+    echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
 fi
+echo ""
+echo -e "${YELLOW}Kill them. Kill them all.${NC}"
+echo ""
