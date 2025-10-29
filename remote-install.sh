@@ -143,16 +143,53 @@ rm -rf "$TEMP_DIR"
 # Check if ~/.local/bin is in PATH
 echo -e "${YELLOW}Checking PATH configuration...${NC}"
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    echo -e "${YELLOW}NOTE: $HOME/.local/bin is not in your PATH.${NC}"
-    echo "Add the following line to your ~/.bashrc, ~/.zshrc, or ~/.profile:"
+    echo -e "${YELLOW}$HOME/.local/bin is not in your PATH.${NC}"
     echo ""
-    echo -e "${GREEN}  export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}"
+
+    # Detect user's shell
+    CURRENT_SHELL=$(basename "$SHELL")
+    case "$CURRENT_SHELL" in
+        bash)
+            RC_FILE="$HOME/.bashrc"
+            ;;
+        zsh)
+            RC_FILE="$HOME/.zshrc"
+            ;;
+        fish)
+            RC_FILE="$HOME/.config/fish/config.fish"
+            ;;
+        *)
+            RC_FILE="$HOME/.profile"
+            ;;
+    esac
+
+    echo -e "${BLUE}Detected shell: ${CURRENT_SHELL}${NC}"
+    echo -e "${BLUE}Configuration file: ${RC_FILE}${NC}"
     echo ""
-    echo "Then run: source ~/.bashrc (or ~/.zshrc, or ~/.profile)"
+    read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r
     echo ""
-    echo "Alternatively, you can run the game directly with:"
-    echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
-    PATH_CONFIGURED=false
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Add PATH to rc file
+        echo "" >> "$RC_FILE"
+        echo "# Added by BA-BAAM! installer" >> "$RC_FILE"
+        if [ "$CURRENT_SHELL" = "fish" ]; then
+            echo "set -gx PATH \$HOME/.local/bin \$PATH" >> "$RC_FILE"
+        else
+            echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$RC_FILE"
+        fi
+        echo -e "${GREEN}PATH added to ${RC_FILE}!${NC}"
+
+        # Add to current PATH
+        export PATH="$HOME/.local/bin:$PATH"
+        echo -e "${GREEN}PATH updated for current session!${NC}"
+        PATH_CONFIGURED=true
+    else
+        echo -e "${YELLOW}Skipping PATH configuration.${NC}"
+        echo "You can run the game directly with:"
+        echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
+        PATH_CONFIGURED=false
+    fi
 else
     PATH_CONFIGURED=true
 fi
@@ -166,17 +203,33 @@ echo "Game installed to: $INSTALL_DIR"
 echo "Launcher script: $BIN_DIR/babaam"
 echo ""
 
-if [ "$PATH_CONFIGURED" = true ]; then
-    echo -e "${BLUE}To start the game, simply run:${NC}"
-    echo -e "${GREEN}  babaam${NC}"
-else
-    echo -e "${BLUE}To start the game after configuring PATH, run:${NC}"
-    echo -e "${GREEN}  babaam${NC}"
-    echo ""
-    echo -e "${BLUE}Or run directly:${NC}"
-    echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
-fi
+# Ask if user wants to start the game
+echo -e "${BLUE}Would you like to start BA-BAAM! now?${NC}"
+echo -e "${YELLOW}Tip: For the best experience, make sure your terminal has a size of 80x24${NC}"
+echo ""
+read -p "Start game now? (y/n): " -n 1 -r
+echo ""
 
-echo ""
-echo -e "${YELLOW}Kill them. Kill them all.${NC}"
-echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "${GREEN}Starting BA-BAAM!...${NC}"
+    echo -e "${YELLOW}Kill them. Kill them all.${NC}"
+    echo ""
+    sleep 1
+    if [ "$PATH_CONFIGURED" = true ]; then
+        exec babaam
+    else
+        exec "$HOME/.local/bin/babaam"
+    fi
+else
+    echo ""
+    if [ "$PATH_CONFIGURED" = true ]; then
+        echo -e "${BLUE}To start the game later, simply run:${NC}"
+        echo -e "${GREEN}  babaam${NC}"
+    else
+        echo -e "${BLUE}To start the game later, run:${NC}"
+        echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
+    fi
+    echo ""
+    echo -e "${YELLOW}Kill them. Kill them all.${NC}"
+    echo ""
+fi
