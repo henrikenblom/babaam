@@ -168,15 +168,10 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
             echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$RC_FILE"
         fi
         echo -e "${GREEN}PATH added to ${RC_FILE}!${NC}"
-
-        # Add to current PATH
-        export PATH="$HOME/.local/bin:$PATH"
-        echo -e "${GREEN}PATH updated for current session!${NC}"
-        PATH_CONFIGURED=true
+        echo -e "${YELLOW}Please restart your terminal or run: source ${RC_FILE}${NC}"
+        PATH_CONFIGURED=false
     else
         echo -e "${YELLOW}Skipping PATH configuration.${NC}"
-        echo "You can run the game directly with:"
-        echo -e "${GREEN}  $HOME/.local/bin/babaam${NC}"
         PATH_CONFIGURED=false
     fi
 else
