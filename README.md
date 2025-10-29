@@ -14,7 +14,31 @@ A feature-rich, action-packed side-scrolling space shooter game that runs in you
 
 ## Installation
 
-### Quick Install (Recommended)
+### One-Line Remote Install (Easiest)
+
+Install BA-BAAM! directly from GitHub with a single command:
+
+```bash
+curl -s https://raw.githubusercontent.com/henrikenblom/babaam/master/remote-install.sh | bash
+```
+
+This will automatically:
+- Download the latest version from GitHub
+- Check your Python version (requires 3.6+)
+- Create a virtual environment
+- Install Python dependencies (pynput, pygame, numpy)
+- Install the game to `~/.local/share/babaam`
+- Create a launcher script in `~/.local/bin/babaam`
+
+After installation, you can run the game from anywhere:
+
+```bash
+babaam
+```
+
+**Note:** You may need to add `~/.local/bin` to your PATH. The installer will provide instructions if needed.
+
+### Local Install
 
 Clone the repository and run the installer:
 
