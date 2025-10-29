@@ -166,24 +166,31 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     echo -e "${BLUE}Detected shell: ${CURRENT_SHELL}${NC}"
     echo -e "${BLUE}Configuration file: ${RC_FILE}${NC}"
     echo ""
-    read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r < /dev/tty
-    echo ""
 
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Add PATH to rc file
-        echo "" >> "$RC_FILE"
-        echo "# Added by BA-BAAM! installer" >> "$RC_FILE"
-        if [ "$CURRENT_SHELL" = "fish" ]; then
-            echo "set -gx PATH \$HOME/.local/bin \$PATH" >> "$RC_FILE"
-        else
-            echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$RC_FILE"
-        fi
-        echo -e "${GREEN}PATH added to ${RC_FILE}!${NC}"
-        echo -e "${YELLOW}Please restart your terminal or run: source ${RC_FILE}${NC}"
+    # Check if PATH is already configured in rc file
+    if grep -q "# Added by BA-BAAM! installer" "$RC_FILE" 2>/dev/null; then
+        echo -e "${YELLOW}PATH configuration already exists in ${RC_FILE}${NC}"
         PATH_CONFIGURED=false
     else
-        echo -e "${YELLOW}Skipping PATH configuration.${NC}"
-        PATH_CONFIGURED=false
+        read -p "Would you like to add $HOME/.local/bin to your PATH in ${RC_FILE}? (y/n): " -n 1 -r < /dev/tty
+        echo ""
+
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            # Add PATH to rc file
+            echo "" >> "$RC_FILE"
+            echo "# Added by BA-BAAM! installer" >> "$RC_FILE"
+            if [ "$CURRENT_SHELL" = "fish" ]; then
+                echo "set -gx PATH \$HOME/.local/bin \$PATH" >> "$RC_FILE"
+            else
+                echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$RC_FILE"
+            fi
+            echo -e "${GREEN}PATH added to ${RC_FILE}!${NC}"
+            echo -e "${YELLOW}Please restart your terminal or run: source ${RC_FILE}${NC}"
+            PATH_CONFIGURED=false
+        else
+            echo -e "${YELLOW}Skipping PATH configuration.${NC}"
+            PATH_CONFIGURED=false
+        fi
     fi
 else
     PATH_CONFIGURED=true
