@@ -96,9 +96,9 @@ You'll be greeted with an awesome animated main menu featuring:
 
 You are the last surviving pilot of a fleet sent to defend a freight ship carrying a mysterious cargo - an artifact that could either bring peace to the galaxy or become the ultimate weapon of destruction. The initial enemy attack wave devastated your elite squadron. You managed to eliminate their first assault with a tactical nuke, but now you're all that stands between the cargo and those who would use it for evil.
 
-Intelligence reports indicate the enemy has intensified their response, deploying their most advanced fleet in overwhelming numbers. Your standard weapons proved inefficient against their advanced armor, but Command has authorized experimental technology: Energy Converters that can forge powerful enhancements from the residual energy of destroyed enemy fighters. Every hostile you eliminate may yield tactical advantages - this is your only edge against their superior numbers.
+Intelligence reports indicate the enemy has intensified their response, deploying their most advanced fleet in overwhelming numbers. To even the playing field Command has authorized experimental technology: Energy Converters that can forge powerful enhancements from the residual energy of destroyed enemy fighters. Every hostile you eliminate may yield tactical advantages - this is your only edge against their superior numbers.
 
-The freight ship cannot defend itself. If even one enemy fighter reaches it, the mission is over. Hold the line, pilot. The fate of the galaxy rests on your shoulders.
+The freight ship cannot defend itself. If enough enemy fighters reaches it, the mission is over. Hold the line, pilot. The fate of the galaxy rests on your shoulders.
 
 ## Game Features
 
