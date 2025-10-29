@@ -246,7 +246,7 @@ Power-ups have a 12% chance to drop when you destroy an enemy (rare drops make h
 
 ### Sound Effects
 
-The game features a retro software synthesizer inspired by the legendary **SID chip** from the Commodore 64, generating authentic 8-bit/16-bit style sounds using sawtooth waves, lowpass filters, and vibrato effects:
+The game features a retro software synthesizer inspired by the hardware synthesizer chips found in consoles and home computers in the 80's, generating authentic 8-bit/16-bit style sounds using sawtooth waves, lowpass filters, and vibrato effects:
 
 - **Shoot**: Punchy, powerful shot with three-layer design - bright sawtooth attack with pitch sweep (1000→800 Hz), bass punch with kick (200→50 Hz), and impact noise burst for maximum satisfaction
 - **Drone Shot**: Synthetic, robotic shot with triangle wave and frequency modulation (600→750 Hz sweep with 35 Hz modulation) - higher-pitched and more mechanical than player shot
