@@ -2095,6 +2095,19 @@ class Game:
 
     def spawn_powerup(self, x: float, y: float):
         """Spawn a random power-up"""
+        # Don't spawn power-ups if spawn position is too close to player's ship
+        # This prevents unwanted power-ups from being auto-collected
+        # Extended safe zone in front of ship to allow dodging
+        safe_zone_forward = 8  # Additional columns in front of the ship
+        safe_zone_vertical = 1  # Additional rows above/below for vertical movement
+
+        # Check if spawn position is within the extended safe zone
+        if (x >= self.player.x and
+            x < self.player.x + self.player.width + safe_zone_forward and
+            y >= self.player.y - safe_zone_vertical and
+            y < self.player.y + self.player.height + safe_zone_vertical):
+            return
+
         # Check for rare nuke drop (5% chance, only after first boss)
         if self.player.score >= 500 and random.random() < 0.05:
             self.powerups.append(PowerUp(x, y, PowerUpType.NUKE))
