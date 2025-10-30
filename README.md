@@ -1,7 +1,5 @@
 # BA-BAAM!
 
-**Version 1.0.2**
-
 A feature-rich, action-packed side-scrolling space shooter game that runs in your terminal!
 
 ![BA-BAAM Main Menu](/media/ba-baam-menu.png)
